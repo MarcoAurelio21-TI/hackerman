@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050805">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌨️</text></svg>">
+    <title>Hackerman Singularity Terminal v10.0</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-matrix">
+
+    <!-- BOOT SCREEN -->
+    <div id="boot-screen">
+        <div id="boot-text"></div>
+        <div id="boot-progress"><div id="boot-bar"></div></div>
+    </div>
+
+    <!-- CANVAS LAYERS -->
+    <canvas id="star-canvas"></canvas>
+    <canvas id="matrix-canvas"></canvas>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- DESKTOP -->
+    <div id="desktop">
+
+        <!-- TOP BAR -->
+        <div id="topbar">
+            <div class="tb-left">
+                <span class="tb-logo">◉ HACKERMAN OS</span>
+                <span class="tb-item" id="tb-clock">--:--:--</span>
+            </div>
+            <div class="tb-center">
+                <button class="tb-app-btn" data-app="terminal" title="Terminal">⌨️</button>
+                <button class="tb-app-btn" data-app="files" title="Ficheiros">📁</button>
+                <button class="tb-app-btn" data-app="editor" title="Editor">📝</button>
+                <button class="tb-app-btn" data-app="browser" title="Navegador">🌐</button>
+                <button class="tb-app-btn" data-app="music" title="Música">🎵</button>
+                <button class="tb-app-btn" data-app="settings" title="Definições">⚙️</button>
+                <button class="tb-app-btn" data-app="vault" title="Cofre">🔐</button>
+                <button class="tb-app-btn" data-app="chat" title="Chat Multiplayer">💬</button>
+                <button class="tb-app-btn" data-app="calendar" title="Calendário">📅</button>
+                <button class="tb-app-btn" data-app="analytics" title="Analytics">📊</button>
+            </div>
+            <div class="tb-right">
+                <span class="tb-item" id="tb-streak">🔥 0</span>
+                <span class="tb-item" id="tb-theme">MATRIX</span>
+                <span class="tb-item" id="tb-user">guest</span>
+                <button id="tb-power" title="Encerrar">⏻</button>
+            </div>
+        </div>
+
+        <!-- WINDOWS AREA -->
+        <div id="windows-area"></div>
+
+        <!-- TERMINAL WINDOW -->
+        <div id="terminal-window" class="window" data-app="terminal">
+            <div class="win-header">
+                <div class="win-controls">
+                    <span class="win-dot close" data-action="close"></span>
+                    <span class="win-dot min" data-action="min"></span>
+                    <span class="win-dot max" data-action="max"></span>
+                </div>
+                <div class="win-title">⌨️ bash — guest@hackerman</div>
+                <div class="win-tabs" id="win-tabs">
+                    <div class="wtab active" data-tab="0">bash</div>
+                    <button class="wtab-add" id="wtab-add">+</button>
+                </div>
+                <button class="win-close-x" id="terminal-close-x" title="Ocultar terminal (Ctrl+T para reabrir)" aria-label="Fechar">×</button>
+            </div>
+            <div class="win-body" id="terminal-body">
+                <div id="output"></div>
+                <div class="prompt-line">
+                    <span class="prompt" id="prompt-text">guest@hackerman:~$</span>
+                    <div class="input-container">
+                        <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus />
+                        <span class="ghost" id="ghost-text"></span>
+                        <span class="cursor" id="custom-cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASKBAR -->
+        <div id="taskbar">
+            <div class="tk-left">
+                <button class="tk-start" id="tk-start">◉</button>
+            </div>
+            <div class="tk-apps" id="tk-apps"></div>
+            <div class="tk-right">
+                <span id="tk-indicator">◉ NORMAL</span>
+                <span>📁 <span id="tk-dir">~</span></span>
+                <span>💾 <span id="tk-files">0</span></span>
+                <span>🔊 <span id="tk-sound">OFF</span></span>
+                <span>⚡ <span id="tk-speed">NORMAL</span></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- START MENU -->
+    <div id="start-menu">
+        <div class="sm-header">
+            <span class="sm-avatar">👤</span>
+            <div>
+                <div class="sm-user">guest</div>
+                <div class="sm-role">root · neural · v10</div>
+            </div>
+        </div>
+        <div class="sm-search">
+            <input type="text" id="sm-search" placeholder="🔍 Procurar apps...">
+        </div>
+        <div class="sm-apps" id="sm-apps"></div>
+        <div class="sm-footer">
+            <button id="sm-lock">🔒 Bloquear</button>
+            <button id="sm-restart">🔄 Reiniciar</button>
+            <button id="sm-shutdown">⏻ Encerrar</button>
+        </div>
+    </div>
+
+    <!-- COMMAND PALETTE -->
+    <div id="palette-overlay">
+        <div id="palette">
+            <input type="text" id="palette-input" placeholder="🔍 Paleta de comandos... (Ctrl+K)" autocomplete="off">
+            <div id="palette-results"></div>
+            <div class="palette-hint">Enter executa · Esc fecha · ↑↓ navega</div>
+        </div>
+    </div>
+
+    <!-- THEME EDITOR -->
+    <div id="theme-editor-overlay">
+        <div id="theme-editor">
+            <div class="te-header">
+                <span>🎨 EDITOR DE TEMAS AVANÇADO</span>
+                <button id="te-close">×</button>
+            </div>
+            <div class="te-tabs">
+                <button class="te-tab active" data-te="colors">Cores</button>
+                <button class="te-tab" data-te="effects">Efeitos</button>
+                <button class="te-tab" data-te="presets">Presets</button>
+                <button class="te-tab" data-te="export">Exportar</button>
+            </div>
+            <div class="te-body" id="te-body"></div>
+            <div class="te-footer">
+                <button id="te-reset">🔄 Reset</button>
+                <button id="te-save">💾 Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOASTS -->
+    <div id="toasts"></div>
+
+    <!-- NOTIFICATIONS -->
+    <div id="notifications"></div>
+
+    <!-- MODAL -->
+    <div id="modal-overlay">
+        <div id="modal">
+            <div id="modal-header"></div>
+            <div id="modal-body"></div>
+            <div id="modal-footer"></div>
+        </div>
+    </div>
+
+    <!-- SHUTDOWN -->
+    <div id="shutdown-screen">
+        <div id="shutdown-text"></div>
+    </div>
+
+    <!-- HIDDEN INPUTS -->
+    <input type="file" id="file-input" accept="image/*" style="display:none">
+
+    <!-- SCRIPTS -->
+    <script src="ai.js"></script>
+    <script src="apps.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
